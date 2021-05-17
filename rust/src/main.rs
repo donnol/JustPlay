@@ -15,6 +15,9 @@ use usersrv::user::User; // 文件路径::模块名::结构体名
 
 use usersrv::userstore::user;
 
+mod store;
+use store::store::test_mysql;
+
 fn main() {
     let r = add(1, 2);
     println!("r: {}", r);
@@ -81,6 +84,9 @@ fn main() {
         }
         _ => (),
     };
+
+    let r = test_mysql();
+    println!("test_mysql: {:#?}", r);
 }
 
 /// A basic example
