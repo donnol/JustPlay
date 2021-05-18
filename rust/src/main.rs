@@ -7,6 +7,9 @@ use std::io::Read;
 use std::ops::Add;
 use std::path::PathBuf;
 use std::str;
+use std::sync::mpsc;
+use std::sync::mpsc::{Receiver, Sender};
+use std::thread;
 
 use structopt::StructOpt;
 
@@ -87,6 +90,12 @@ fn main() {
 
     let r = test_mysql();
     println!("test_mysql: {:#?}", r);
+
+    // 多线程：通过channel传递数据
+    let (tx, rx): (Sender<i32>, Receiver<i32>) = mpsc::channel();
+    thread::spawn(move || tx.send(1));
+
+    println!("revc: {:#?}", rx.recv());
 }
 
 /// A basic example
