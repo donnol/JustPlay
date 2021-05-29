@@ -22,16 +22,25 @@ mod store;
 use store::store::test_mysql;
 
 use std::error::Error;
-use std::time::{Duration, Instant};
 
-use futures_timer::Delay;
+use std::time;
+use std::time::Duration;
+use std::thread::sleep;
 
-async fn smoke() -> Result<(), Box<dyn Error + Send + Sync + 'static>> {
-    let dur = Duration::from_millis(10);
-    let start = Instant::now();
-    Delay::new(dur).await;
-    assert!(start.elapsed() >= (dur / 2));
-    Ok(())
+fn test_timer() {
+    let interval = Duration::from_millis(1000);
+
+    println!("wait");
+
+    sleep(interval);
+
+    println!("Done");
+
+    for i in 1..10 {
+        println!("wait in loop: {:?}", i);
+        sleep(interval);
+        println!("done in loop: {:?}", i);
+    };
 }
 
 use actix_web::{get, web, App, HttpServer, Responder};
@@ -44,7 +53,7 @@ async fn index(web::Path((id, name)): web::Path<(u32, String)>) -> impl Responde
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     // test();
-    smoke();
+    test_timer();
 
     HttpServer::new(|| App::new().service(index))
         .bind("127.0.0.1:8080")?
